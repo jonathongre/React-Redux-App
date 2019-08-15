@@ -1,27 +1,40 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { getData } from './actions';
 
 import './App.css';
 
-function App(props) {
-  const handleClick = (e) => {
-    e.preventDefault()
-    props.getData()
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {addClass: false}
+}
+
+componentDidMount(){
+  this.props.getData()
+}
+toggle() {
+    this.setState({addClass: !this.state.addClass});
   }
-  console.log('APP: ', props)
+render() {
+  console.log('APP: ', this.props)
+  let punchlineClass = ["punchline"];
+        if(this.state.addClass) {
+        punchlineClass.push('show');
+        }
   return (
     <div className="App">
-      <h1>{props.jokes.setup}</h1>
-      <h2>{props.jokes.punchline}</h2>
-      <button onClick={handleClick}>Let's Laugh</button>
+      <div className='card-container'>
+        <h1>{this.props.jokes.setup}</h1>
+        <h2 className={punchlineClass.join(' ')} >{this.props.jokes.punchline}</h2>
+        <button onClick={this.toggle.bind(this)}>{this.state.addClass ? "Close" : "Answer"}</button>
+      </div>
     </div>
   );
 }
-
+}
 const mapStateToProps = state => {
   return {
-    test: state.test,
     jokes: state.jokes
   }
 }
